@@ -1,0 +1,133 @@
+{% extends '_base.html' %}
+
+{% block title %}
+    مقایسه محصولات
+
+{% endblock %}
+{% block content %}
+
+    <main class="main">
+
+        <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+            <div class="container">
+                <h1 class="page-title">مقایسه محصولات 2<span>فروشگاه</span></h1>
+            </div><!-- End .container -->
+        </div><!-- End .page-header -->
+        <nav aria-label="breadcrumb" class="breadcrumb-nav">
+            <div class="container">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index-1.html">خانه</a></li>
+                    <li class="breadcrumb-item"><a href="#">فروشگاه</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">مقایسه محصولات 2</li>
+                </ol>
+            </div><!-- End .container -->
+        </nav><!-- End .breadcrumb-nav -->
+
+        <div class="page-content">
+            <div class="container">
+                <div class="compare-table table-responsive">
+                    <table class="table mb-0">
+                        <tbody>
+                        <tr>
+                            <td class="first-column">محصول</td>
+                            {% for item in compair %}
+                                <td class="product-image-title">
+                                    <a href="#" class="image"><img src="{{ item.product_obj.cover.url }}"
+                                                                   alt="Compare Product"></a>
+                                    <a href="#" class="category">لباس</a>
+                                    <a href="#" class="title">{{ item.product_obj.title }}</a></td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <td class="first-column">توضیحات</td>
+                            {% for item in compair %}
+                                <td class="pro-desc">
+                                    <p>{{ item.product_obj.description | truncatewords:20}}</p>
+                                </td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <td class="first-column">قیمت</td>
+                            {% for item in compair %}
+                                <td class="pro-price">{{ item.product_obj.total_price }} تومان</td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <td class="first-column">رنگ</td>
+                            {% for item in compair%}
+                                <td class="pro-color">
+                                {% for color in item.product_obj.color.all %}
+                                    {{ color }},
+                                {% endfor %}
+                                 </td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <td class="first-column">سایز</td>
+                           {% for item in compair%}
+                                <td class="pro-color">
+                                {% for size in item.product_obj.size.all %}
+                                    {{ size }},
+                                {% endfor %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <td class="first-column">وضعیت موجودی</td>
+                            {% for item in compair %}
+                                {% if item.product_obj.stock == 0 %}
+                                    <td class="pro-stock"><span class="out-of-stock">ناموجود</span></td>
+                                {% else %}
+                                    <td class="pro-stock"><span class="in-stock">موجود</span></td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <td class="first-column">افزودن به سبد خرید</td>
+
+                            {% for item in compair %}
+                            <td class="pro-addtocart">
+                                <button class="btn btn-block btn-outline-primary-2"><i
+                                        class="icon-cart-plus"></i>افزودن به سبد خرید
+                                </button>
+                            </td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <td class="first-column">حذف</td>
+                            {% for item in compair %}
+                                <td class="pro-remove">
+                                    <a href="{% url 'product:remove_compair' item.product_obj.id %}">
+                                        <button class="btn btn-block"><i class="icon-close"></i>حذف
+                                            محصول
+                                        </button>
+                                    </a>
+
+
+                                </td>
+                            {% endfor %}
+
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="wishlist-share">
+                    <div class="social-icons social-icons-sm mb-2 mt-3">
+                        <label class="social-label">اشتراک گذاری در : </label>
+                        <a href="#" class="social-icon" title="فیسبوک" target="_blank"><i
+                                class="icon-facebook-f"></i></a>
+                        <a href="#" class="social-icon" title="توییتر" target="_blank"><i
+                                class="icon-twitter"></i></a>
+                        <a href="#" class="social-icon" title="اینستاگرام" target="_blank"><i
+                                class="icon-instagram"></i></a>
+                        <a href="#" class="social-icon" title="یوتیوب" target="_blank"><i
+                                class="icon-youtube"></i></a>
+                        <a href="#" class="social-icon" title="پینترست" target="_blank"><i
+                                class="icon-pinterest"></i></a>
+                    </div><!-- End .soial-icons -->
+                </div><!-- End .wishlist-share -->
+            </div><!-- End .container -->
+        </div><!-- End .page-content -->
+    </main><!-- End .main -->
+{% endblock %}

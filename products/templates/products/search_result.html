@@ -1,0 +1,113 @@
+{% extends '_base.html' %}
+
+{% block title %}
+
+{% endblock %}
+
+
+{% block content %}
+
+
+      <main class="main">
+            <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+                <div class="container">
+                    <h1 class="page-title">لیست<span>فروشگاه</span></h1>
+                </div><!-- End .container -->
+            </div><!-- End .page-header -->
+            <nav aria-label="breadcrumb" class="breadcrumb-nav mb-2">
+                <div class="container">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index-1.html">خانه</a></li>
+                        <li class="breadcrumb-item"><a href="#">فروشگاه</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">لیست</li>
+                    </ol>
+                </div><!-- End .container -->
+            </nav><!-- End .breadcrumb-nav -->
+
+            <div class="page-content">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-9"><h3 style="text-align: center; vertical-align: middle;">   شما جستجو کردین برای: {{ searched }}  </h3><br>
+
+                        {% for product in products %}
+                            <div class="products mb-3">
+                                <div class="product product-list">
+                                    <div class="row">
+                                        <div class="col-6 col-lg-3">
+                                            <figure class="product-media">
+                                                <span class="product-label label-new">جدید</span>
+                                                <a href="">
+                                                    <img src="{{ product.cover.url }}" alt="تصویر محصول"
+                                                        class="product-image">
+                                                </a>
+                                            </figure><!-- End .product-media -->
+                                        </div><!-- End .col-sm-6 col-lg-3 -->
+
+                                        <div class="col-6 col-lg-3 order-lg-last">
+                                            <div class="product-list-action">
+                                                <div class="product-price">
+                                                    {{ product.total_price}} تومان
+                                                </div><!-- End .product-price -->
+                                                <div class="ratings-container">
+                                                    <div class="ratings">
+                                                        <div class="ratings-val" style="width: 20%;"></div>
+                                                        <!-- End .ratings-val -->
+                                                    </div><!-- End .ratings -->
+                                                    <span class="ratings-text">( 2 بازدید )</span>
+                                                </div><!-- End .rating-container -->
+
+                                                <div class="product-action">
+
+                                                    <a href="#" class="btn-product btn-compare"
+                                                        title="مقایسه"><span>مقایسه</span></a>
+                                                </div><!-- End .product-action -->
+
+                                                <a href="#" class="btn-product btn-cart"><span>افزودن به سبد
+                                                        خرید</span></a>
+                                            </div><!-- End .product-list-action -->
+                                        </div><!-- End .col-sm-6 col-lg-3 -->
+
+                                        <div class="col-lg-6">
+                                            <div class="product-body product-action-inner">
+                                                <a href="{% url 'product:add_favorite_product' product.id %}" class="btn-product btn-wishlist"
+                                                    title="افزودن به لیست علاقه مندی"><span>افزودن به لیست علاقه
+                                                        مندی</span></a>
+                                                <div class="product-cat">
+                                                    <a href="#">{{ product.category.name }}</a>
+                                                </div><!-- End .product-cat -->
+                                                <h3 class="product-title"><a href="product.html">{{ product.title}}</a>
+                                                </h3><!-- End .product-title -->
+
+                                                <div class="product-content">
+                                                    <p>
+                                                        {{ product.description | truncatewords:20 }}</p>
+                                                </div><!-- End .product-content -->
+
+                                            </div><!-- End .product-body -->
+                                        </div><!-- End .col-lg-6 -->
+                                    </div><!-- End .row -->
+                                </div><!-- End .product -->
+
+
+
+                        {% endfor %}
+
+
+
+
+
+
+
+                            </div><!-- End .product -->
+
+
+                        </div><!-- End .col-lg-9 -->
+
+                    </div><!-- End .row -->
+                </div><!-- End .container -->
+            </div><!-- End .page-content -->
+        </main><!-- End .main -->
+
+
+
+{% endblock %}

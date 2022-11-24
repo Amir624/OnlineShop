@@ -1,0 +1,98 @@
+{% extends '_base.html' %}
+
+{% block title %}
+لیست علاقه مندی
+{% endblock %}
+
+{% block content %}
+
+
+ <main class="main">
+            <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+                <div class="container">
+                    <h1 class="page-title">لیست علاقه مندی<span>فروشگاه</span></h1>
+                </div><!-- End .container -->
+            </div><!-- End .page-header -->
+            <nav aria-label="breadcrumb" class="breadcrumb-nav">
+                <div class="container">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index-1.html">خانه</a></li>
+                        <li class="breadcrumb-item"><a href="#">فروشگاه</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">لیست علاقه مندی</li>
+                    </ol>
+                </div><!-- End .container -->
+            </nav><!-- End .breadcrumb-nav -->
+
+            <div class="page-content">
+                <div class="container">
+                    <table class="table table-wishlist table-mobile">
+                    {% if products %}
+                        <thead>
+                            <tr>
+                                <th>محصول</th>
+                                <th>قیمت</th>
+                                <th>وضعیت محصول</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                        {% for product in products %}
+                            <tr>
+                                <td class="product-col">
+                                    <div class="product">
+                                        <figure class="product-media">
+                                            <a href="#">
+                                                <img src="{{ product.cover.url}}" alt="تصویر محصول">
+                                            </a>
+                                        </figure>
+
+                                        <h3 class="product-title">
+                                            <a href="#">{{ product.title}}</a>
+                                        </h3><!-- End .product-title -->
+                                    </div><!-- End .product -->
+                                </td>
+                                <td class="price-col">{{ product.total_price }} تومان</td>
+                                <td class="stock-col"><span class="in-stock">موجود</span></td>
+                                <td class="action-col">
+                                    <button class="btn btn-block btn-outline-primary-2"><i
+                                            class="icon-cart-plus"></i>افزودن به سبد خرید</button>
+                                </td>
+                                <td class="remove-col text-left">
+                                    <a href="{% url 'product:remove_favorite_product' product.id %}"> <button class="btn-remove"><i
+                                            class="icon-close"></i> </button></a>
+
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <h3 style="text-align: center; vertical-align: middle;"> محصولی در لیست شما وجود ندارد </h3>
+                    {% endif %}
+                        </tbody>
+                    </table><!-- End .table table-wishlist -->
+                    <div class="wishlist-share">
+                        <div class="social-icons social-icons-sm mb-2">
+                            <label class="social-label">اشتراک گذاری در : </label>
+                            <a href="#" class="social-icon" title="فیسبوک" target="_blank"><i
+                                    class="icon-facebook-f"></i></a>
+                            <a href="#" class="social-icon" title="توییتر" target="_blank"><i
+                                    class="icon-twitter"></i></a>
+                            <a href="#" class="social-icon" title="اینستاگرام" target="_blank"><i
+                                    class="icon-instagram"></i></a>
+                            <a href="#" class="social-icon" title="یوتیوب" target="_blank"><i
+                                    class="icon-youtube"></i></a>
+                            <a href="#" class="social-icon" title="پینترست" target="_blank"><i
+                                    class="icon-pinterest"></i></a>
+                        </div><!-- End .soial-icons -->
+                    </div><!-- End .wishlist-share -->
+                </div><!-- End .container -->
+            </div><!-- End .page-content -->
+        </main><!-- End .main -->
+
+
+
+
+
+
+{% endblock %}
