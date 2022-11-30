@@ -858,4 +858,14 @@ $(document).ready(function () {
             return true;
         }
     });
+
+    $(".choose-size").hide();
+    $(".choose-color").on('click', function(){
+        var _color=$(this).attr('data-color');
+        $(".choose-size").hide();
+        $(".color+_color").show();
+
+    });
+    $(".choose-color").first().attr('data-color');
+    $(".color"+_color).show();
 });

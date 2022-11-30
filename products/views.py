@@ -1,6 +1,6 @@
-from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404, HttpResponseRedirect, redirect
 from django.urls import reverse_lazy
-from .models import Product, ProductGallery, Variant, Category, Comment
+from .models import Product, ProductGallery, Variant, Category, Comment, Color
 from .forms import CommentForm
 from django.db.models import Q, Min, Max
 from .compair import Compair
@@ -27,29 +27,43 @@ def products_views(request):
 
 
 def product_detail(request, slug, pk):
-    products = get_object_or_404(Product, slug=slug, pk=pk)
+    product = get_object_or_404(Product, slug=slug, pk=pk)
+    # variant = get_object_or_404(Variant, pk=pk)
     gallery = ProductGallery.objects.filter(product_id=pk)
-    comments = products.comments.all()
-    similar = products.tags.similar_objects()[:4]
+    comments = product.comments.all()
+    similar = product.tags.similar_objects()[:4]
     form = CommentForm()
-    if products.status != 'None':
+    color = Variant.objects.filter(product_id=pk).values('color__name', 'color_id', 'color__color_code').distinct()
+    size = Variant.objects.filter(product_id=pk).distinct('size__name', 'size_id')
+    if request.method == 'POST':
+        variant = Variant.objects.filter(product_id=pk).distinct('color_id', )
+        var_id = request.POST.get('select')
+        variants = Variant.objects.get(id=var_id)
 
-        if request.method == 'POST':
-
-            variant = Variant.objects.filter(product_id=pk)
-
-            var_id = request.POST.get('select')
-            variants = Variant.objects.get(id=var_id)
-
-        else:
-            variant = Variant.objects.filter(product_id=pk)
-            variants = Variant.objects.get(id=variant[0].id)
-        context = {'products': products, 'gallery': gallery, 'variant': variant, 'varints': variants, 'form': form,
-                   'comments': comments, 'similar': similar}
-        return render(request, 'products/product_details.html', context)
     else:
-        return render(request, 'products/product_details.html',
-                      {'products': products, 'form': form, 'similar': similar})
+        variant = Variant.objects.filter(product_id=pk).distinct('color_id',)
+
+        variants = Variant.objects.get(id=variant[0].id)
+
+        # return render(request, 'products/product_details.html',{'variants': variants, 'variant': variant,'product_var': variant})
+
+    return render(request, 'products/product_details.html',
+                  {'products': product, 'form': form, 'similar': similar, 'product_var': variant, 'sizes': size,
+                   'colors': color, 'variant': variant, 'variants': variants})
+
+    # if request.method == 'POST':
+    #
+    #     # variant = Variant.objects.filter(product_id=pk).values('color__name', 'color_id',
+    #     #                                                        'color__color_code').distinct()
+    #
+    # var_id = request.POST.get('select')
+    # variants = Variant.objects.get(id=var_id)
+    #
+    #     variant = Variant.objects.filter(product_id=pk)
+    #     variants = Variant.objects.get(id=variant[0].id)
+    #     context = {'products': products, 'gallery': gallery, 'variant': variant, 'varints': variants, 'form': form,
+    #            'comments': comments, 'similar': similar, }
+    #     return render(request, 'products/product_details.html', context)
 
 
 @require_POST
@@ -63,12 +77,13 @@ def product_comments(request, pk):
             new_form.user = request.user
             new_form.product = product
             new_form.save()
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            form = CommentForm()
+            return redirect('product:detail_page')
 
     else:
         form = CommentForm()
 
-    return render(request, 'products/product_details.html', {'form': form})
+    return render(request, 'products/product_details.html', {'form': form, 'products': product})
 
 
 def comment_like(request, pk):

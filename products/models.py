@@ -25,6 +25,7 @@ class Brand(models.Model):
 
 class Color(models.Model):
     name = models.CharField(max_length=50)
+    color_code = models.CharField(max_length=20, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -69,7 +70,7 @@ class Product(models.Model):
     def __str__(self):
         return self.title
 
-    def get_absolute_url(self, ):
+    def get_absolute_url(self):
         return reverse('product:detail_page', args=[self.slug, self.id])
 
     @property
@@ -85,8 +86,8 @@ class Product(models.Model):
 
 class Variant(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_variant')
-    size = models.ManyToManyField(Size,  related_name='var_size', blank=True)
-    color = models.ManyToManyField(Color, related_name='var_color', blank=True)
+    color = models.ForeignKey(Color, on_delete=models.CASCADE,related_name='var_color', blank=True, null=True)
+    size = models.ForeignKey(Size,  on_delete=models.CASCADE,related_name='var_size', blank=True, null=True)
     stock = models.PositiveIntegerField()
     unit_price = models.PositiveIntegerField()
     discount = models.PositiveIntegerField(blank=True, null=True)
@@ -101,7 +102,7 @@ class Variant(models.Model):
         if not self.discount:
             return self.unit_price
         elif self.discount:
-            total = (self.unit_price * self.unit_price) / 100
+            total = (self.unit_price * self.discount) / 100
 
             return int(total - self.unit_price)
         return self.total_price
@@ -126,3 +127,6 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.text
+
+    def get_absolute_url(self):
+        return reverse('product:detail_page', args=[self.id])
