@@ -17,4 +17,6 @@ urlpatterns = [
     path('compair/', compair_detail_view, name='compair'),
     path('add/compair/<int:product_id>/', add_to_compair, name='add_compair'),
     path('remove/compair/<int:product_id>/', remove_compair, name='remove_compair'),
+    path('clear/compair/', clear_compair, name='clear_compair'),
+    path('category/<int:pk>/', category, name='category'),
 ]

@@ -2,7 +2,8 @@ from django import forms
 from .models import CustomUser
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth import get_user_model
-from .models import CustomUser
+from .models import CustomUser, Profile
+
 error = {
     'required': 'این فیلد اجباری است',
     'invalid': 'درست وارد کنید',
@@ -27,3 +28,10 @@ class LoginForm(forms.Form):
 
 class ConfrimCode(forms.Form):
     code = forms.IntegerField()
+
+
+class CompleteProfile(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('first_name', 'last_name', 'birth_day', 'mobile', 'address')
+

@@ -1,2 +1,5 @@
 venv/
-*pycach/
+__pychache__/
+db.sqlite3
+.idea/
+.env

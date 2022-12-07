@@ -8,3 +8,10 @@ class AddToCartProduct(forms.Form):
 
     quantity = forms.TypedChoiceField(choices=QUANTITY_CHOICES, coerce=int)
     inplace = forms.BooleanField(required=False, widget=forms.HiddenInput)
+
+
+class CouponForm(forms.Form):
+
+    code = forms.CharField(max_length=50)
+
+

@@ -1,4 +1,6 @@
 {% extends '_base.html' %}
+{% load humanize %}
+
 
 {% block title %}
 لیست علاقه مندی
@@ -10,14 +12,14 @@
  <main class="main">
             <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
                 <div class="container">
-                    <h1 class="page-title">لیست علاقه مندی<span>فروشگاه</span></h1>
+                    <h1 class="page-title">لیست علاقه مندی<span></span></h1>
                 </div><!-- End .container -->
             </div><!-- End .page-header -->
             <nav aria-label="breadcrumb" class="breadcrumb-nav">
                 <div class="container">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index-1.html">خانه</a></li>
-                        <li class="breadcrumb-item"><a href="#">فروشگاه</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'product:home' %}">خانه</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'product:products' %}">فروشگاه</a></li>
                         <li class="breadcrumb-item active" aria-current="page">لیست علاقه مندی</li>
                     </ol>
                 </div><!-- End .container -->
@@ -49,15 +51,24 @@
                                         </figure>
 
                                         <h3 class="product-title">
-                                            <a href="#">{{ product.title}}</a>
+                                            <a href="{{ product.get_absolute_url }}">{{ product.title}}</a>
                                         </h3><!-- End .product-title -->
                                     </div><!-- End .product -->
                                 </td>
-                                <td class="price-col">{{ product.total_price }} تومان</td>
+                                <td class="price-col">{{ product.total_price | intcomma}} تومان</td>
                                 <td class="stock-col"><span class="in-stock">موجود</span></td>
                                 <td class="action-col">
+                                    <form method="POST" action="{% url 'add_cart' product.id %}">
+                                            {% csrf_token %}
+
+                                            <input type="hidden" name="quantity" id="qty" class="btn-product btn-cart" value="1"
+                                                   min="1"
+                                                   max="30" step="1" data-decimals="0" required>
+
                                     <button class="btn btn-block btn-outline-primary-2"><i
                                             class="icon-cart-plus"></i>افزودن به سبد خرید</button>
+                                    </form>
+
                                 </td>
                                 <td class="remove-col text-left">
                                     <a href="{% url 'product:remove_favorite_product' product.id %}"> <button class="btn-remove"><i
@@ -83,7 +94,7 @@
                             <a href="#" class="social-icon" title="یوتیوب" target="_blank"><i
                                     class="icon-youtube"></i></a>
                             <a href="#" class="social-icon" title="پینترست" target="_blank"><i
-                                    class="icon-pinterest"></i></a>
+                                      class="icon-pinterest"></i></a>
                         </div><!-- End .soial-icons -->
                     </div><!-- End .wishlist-share -->
                 </div><!-- End .container -->

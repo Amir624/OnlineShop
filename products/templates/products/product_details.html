@@ -1,6 +1,7 @@
 {% extends '_base.html' %}
 {% load crispy_forms_tags %}
 {% load humanize %}
+{% load static %}
 {% block title %}
     مشخصات محصول
 {% endblock %}
@@ -15,22 +16,12 @@
         <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
             <div class="container d-flex align-items-center">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="index-1.html">خانه</a></li>
-                    <li class="breadcrumb-item"><a href="#">محصولات</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">توضیحات وسط چین</li>
+                    <li class="breadcrumb-item"><a href="{% url 'product:home' %}">خانه</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'product:products' %}">محصولات</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">اطلاعات محصول</li>
                 </ol>
 
-                <nav class="product-pager mr-auto" aria-label="Product">
-                    <a class="product-pager-link product-pager-prev" href="#" aria-label="Previous" tabindex="-1">
-                        <i class="icon-angle-right"></i>
-                        <span>قبلی</span>
-                    </a>
 
-                    <a class="product-pager-link product-pager-next" href="#" aria-label="Next" tabindex="-1">
-                        <span>بعدی</span>
-                        <i class="icon-angle-left"></i>
-                    </a>
-                </nav><!-- End .pager-nav -->
             </div><!-- End .container -->
         </nav><!-- End .breadcrumb-nav -->
 
@@ -70,6 +61,8 @@
                         <div class="col-md-6">
                             <div class="product-details product-details-centered">
                                 <h1 class="product-title text-center">{{ products.title }}</h1>
+
+
                                 <!-- End .product-title -->
 
                                 <div class="ratings-container">
@@ -89,7 +82,7 @@
 
                                 <div class="product-content">
                                     <p class="text-center">
-                                        {{ products.description }}</p>
+                                        {{ products.short_description | safe }}</p>
 
 
                                     {#                                    {% for data in color %}#}
@@ -106,12 +99,15 @@
 
                                                 {% csrf_token %}
 
-                                                {% for data in variant %}
+                                                {% for color in colors %}
 
-                                                    <input type="radio" name="select" onchange="this.form.submit();"
-                                                           value="{{ data.id }}"
-                                                            {% if variants.id == data.id %} checked{% endif %} >{{ data.color }}<br>
-{#                                                           style="background-color: {{ color.color__color_code }};color: white;border: 1px solid #e4e4e4;padding: 8px;border-radius: 3px;cursor: pointer;">{{ data.color}}</input>#}
+                                                    <input type="radio" name="select"
+                                                           style="background: {{ color.color.color_code }};"
+                                                           onchange="this.form.submit();"
+                                                           value="{{ color.id }}"
+                                                            {% if variants.id == color.id %} checked{% endif %} >
+                                                    {{ color.color.name }}<br>
+
 
 
                                                 {% endfor %}
@@ -120,17 +116,18 @@
                                     </div>
                                     <div class="details-filter-row details-row-size">
                                         <label for="size">سایز : </label>
-                                        <div class="select-custom">
+                                        <div >
                                             <form action="" method="post">
 
                                                 {% csrf_token %}
 
-                                                {% for data in variant %}
+                                                {% for size in sizes %}
 
                                                     <input type="radio" name="select" onchange="this.form.submit();"
-                                                           value="{{ data.id }}"
-                                                            {% if variants.id == data.id %} checked{% endif %} >{{ data.size }}<br>
-{#                                                           style="background-color: {{ color.color__color_code }};color: white;border: 1px solid #e4e4e4;padding: 8px;border-radius: 3px;cursor: pointer;">{{ data.color}}</input>#}
+                                                           value="{{ size.id }}"
+                                                            {% if variants.id == size.id %} checked{% endif %} >
+                                                    {{ size.size.name }}<br>
+                                                    {#                                                           style="background-color: {{ color.color__color_code }};color: white;border: 1px solid #e4e4e4;padding: 8px;border-radius: 3px;cursor: pointer;">{{ data.color}}</input>#}
 
 
                                                 {% endfor %}
@@ -149,11 +146,21 @@
                                         <label>رنگ : </label>
 
                                         <div class="product-nav product-nav-dots">
-                                            {% for color in colors %}
-                                                <button data-color="{{ color.color__id }}"
-                                                        style="background-color: {{ color.color__color_code }};color: white;border: 1px solid #e4e4e4;padding: 8px;border-radius: 3px;cursor: pointer;">{{ color.color__name }}</button>
+                                             <form action="" method="post">
 
-                                            {% endfor %}
+                                                {% csrf_token %}
+
+                                                {% for data in variant %}
+
+                                                    <input type="radio" name="select" onchange="this.form.submit();"
+                                                           value="{{ data.id }}"
+                                                            {% if variants.id == data.id %} checked{% endif %} >
+                                                    {{ data.color }}<br>
+                                                    {#                                                           style="background-color: {{ color.color__color_code }};color: white;border: 1px solid #e4e4e4;padding: 8px;border-radius: 3px;cursor: pointer;">{{ data.color}}</input>#}
+
+
+                                                {% endfor %}
+                                            </form>
                                         </div><!-- End .product-nav -->
                                     </div><!-- End .details-filter-row -->
 
@@ -161,14 +168,31 @@
 
                                     <div class="details-filter-row details-row-size">
                                         <label for="size">سایز : </label>
-                                        <div class="select-custom">
-                                            <select name="size" id="size" class="form-control">
-                                                <option value="#" selected="selected">سایز را انتخاب کنید</option>
-                                                {% for size in sizes %}
-                                                    <option value="{{ size.size_id }}">{{ size.size__name }}</option>
-                                                {% endfor %}
+                                        <div >
 
-                                            </select>
+                                            <form action="" method="post">
+
+                                                {% csrf_token %}
+
+                                                {% for data in variant %}
+
+                                                    <input type="radio" name="select" onchange="this.form.submit();"
+                                                           value="{{ data.id }}"
+                                                            {% if variants.id == data.id %} checked{% endif %} >
+                                                    {{ data.size }}<br>
+                                                    {#                                                           style="background-color: {{ color.color__color_code }};color: white;border: 1px solid #e4e4e4;padding: 8px;border-radius: 3px;cursor: pointer;">{{ data.color}}</input>#}
+
+
+                                                {% endfor %}
+                                            </form>
+{#                                        #}
+{#                                            <select name="select" id="size" class="form-control">#}
+{#                                                <option value="#" selected="selected">سایز را انتخاب کنید</option>#}
+{#                                                {% for size in variant %}#}
+{#                                                    {{ size.size.name }}#}
+{#                                                {% endfor %}#}
+{##}
+{#                                            </select>#}
                                         </div><!-- End .select-custom -->
                                     </div>
                                 {% endif %}
@@ -233,15 +257,15 @@
                         <a class="nav-link active" id="product-desc-link" data-toggle="tab"
                            href="#product-desc-tab" role="tab" aria-controls="product-desc-tab"
                            aria-selected="true">توضیحات</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="product-info-link" data-toggle="tab" href="#product-info-tab"
-                           role="tab" aria-controls="product-info-tab" aria-selected="false">اطلاعات بیشتر</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="product-shipping-link" data-toggle="tab"
-                           href="#product-shipping-tab" role="tab" aria-controls="product-shipping-tab"
-                           aria-selected="false">ارسال و بازگشت</a>
+                        {#                    </li>#}
+                        {#                    <li class="nav-item">#}
+                        {#                        <a class="nav-link" id="product-info-link" data-toggle="tab" href="#product-info-tab"#}
+                        {#                           role="tab" aria-controls="product-info-tab" aria-selected="false">اطلاعات بیشتر</a>#}
+                        {#                    </li>#}
+                        {#                    <li class="nav-item">#}
+                        {#                        <a class="nav-link" id="product-shipping-link" data-toggle="tab"#}
+                        {#                           href="#product-shipping-tab" role="tab" aria-controls="product-shipping-tab"#}
+                        {#                           aria-selected="false">ارسال و بازگشت</a>#}
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" id="product-review-link" data-toggle="tab"
@@ -254,22 +278,8 @@
                          aria-labelledby="product-desc-link">
                         <div class="product-desc-content">
                             <h3>اطلاعات محصول</h3>
-                            <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم لورم ایپسوم متن ساختگی با تولید
-                                سادگی نامفهوم لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم لورم ایپسوم متن
-                                ساختگی با تولید سادگی نامفهوم لورم ایپسوم متن ساختگی با تولید سادگی نامفهوملورم
-                                ایپسوم متن ساختگی با تولید سادگی نامفهوملورم ایپسوم متن ساختگی با تولید سادگی
-                                نامفهوم. </p>
-                            <ul>
-                                <li>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم</li>
-                                <li>لورم ایپسوم متن ساختگی با تولید سادگی.</li>
-                                <li>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم لورم ایپسوم</li>
-                            </ul>
+                            <p>{{ products.description |safe }}</p>
 
-                            <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم لورم ایپسوم متن ساختگی با تولید
-                                سادگی نامفهوم لورم ایپسوم متن ساختگی با تولید سادگی نامفهوملورم ایپسوم متن
-                                ساختگی با تولید سادگی نامفهوم، لورم ایپسوم متن ساختگی با تولید سادگی نامفهوملورم
-                                ایپسوم متن ساختگی با تولید سادگی نامفهوملورم ایپسوم متن ساختگی با تولید سادگی
-                                نامفهوملورم ایپسوم متن ساختگی با تولید سادگی نامفهوم. </p>
                         </div><!-- End .product-desc-content -->
                     </div><!-- .End .tab-pane -->
                     <div class="tab-pane fade" id="product-info-tab" role="tabpanel"
@@ -318,7 +328,7 @@
                                 <div class="row no-gutters">
                                     <form method="POST" action="{% url 'product:comment' products.id %}">
                                         {% csrf_token %}
-                                        {{ form.text }}
+                                        {{ form.text | safe }}
                                         <div class="text-center">
                                             <button type="submit" class="btn btn-dark">send</button>
                                         </div>
@@ -345,7 +355,7 @@
                                         </div><!-- End .col -->
                                         <div class="col-12">
                                             <div class="review-content">
-                                                <p> {{ comment.text }}</p>
+                                                <p> {{ comment.text | safe }}</p>
                                             </div><!-- End .review-content -->
 
                                             <div class="review-action">
@@ -446,7 +456,7 @@
 
             </div><!-- End .owl-carousel -->
         </div><!-- End .container -->
-        </div><!-- End .page-content -->
+
     </main><!-- End .main -->
 
 
@@ -456,12 +466,62 @@
 
 
 
+    <script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+    <script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+    <script>
+        $(document).on('href', '.btn-product btn-wishlist', function (event) {
+            event.preventDefault();
+            $.ajax({
+                url: $(this).attr('href'),
+                type: 'GET',
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function (response) {
+                    alert('ok')
+                },
+                error: function (error) {
+                    alert('error')
+                },
+            });
+
+        });
+    </script>
+
+    <script>
+
+        $(".choose-size").hide();
+
+        $(".choose-color").on('click', function () {
+            var _color = $(this).attr('data-color');
+
+            $(".choose-size").hide();
+            $("color" + _color).show();
+            $("color" + _color).first().addClass('active');
+        });
 
 
 
 
+        $(".choose-size").on('click', function () {
+            $(".choose-size").removeClass('active');
+            $(this).add('data-price');
+            var _price = $(this).attr('data-price');
+            $(".product-price").text(_price);
+
+
+        })
+
+        $(".choose-color").first().addClass('focused');
+        var _color = $(".choose-color").first.attr('data-color');
+        var _price = $(".choose-size").first.attr('data-prise');
+
+        $('.color' + _color).show();
+        $("color" + _color).first().addClass('active');
+        $(".product-price").text(_price);
 
 
 
+
+    </script>
 
 {% endblock %}

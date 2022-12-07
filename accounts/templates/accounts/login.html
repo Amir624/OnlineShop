@@ -30,19 +30,33 @@
 </head>
 
 <body>
+
+
 <div class="page-wrapper">
 
 
     <main class="main">
+
+    {% for message in messages %}
+        <div class="container-fluid p-0">
+            <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="True">&times;</span>
+                </button>
+               <h4 style="text-align: center; vertical-align: middle;  color: white;">{{ message }}</h4>
+            </div>
+        </div>
+    {% endfor %}
+
 
         <div class="login-page bg-image pt-8 pb-8 pt-md-12 pb-md-12 pt-lg-17 pb-lg-17"
              style="background-image: url('{% static 'images/backgrounds/login-bg.jpg' %}')">
             <div class="container">
                 <div class="form-box">
 
-                                <br>
-                                <br>
-                                <br>
+                    <br>
+                    <br>
+                    <br>
                     <div class="form-tab">
                         <ul class="nav nav-pills nav-fill" role="tablist">
 
@@ -56,10 +70,13 @@
                                 <form action="{% url 'login' %}" method="POST">
                                     {% csrf_token %}
                                     <label for="id_user_name"> نام کاربری:</label>
-                                    <input type="text"   class="form-control" name="user_name" maxlength="50" required="" id="id_user_name">
+                                    <input type="text" class="form-control" name="user_name" maxlength="50" required=""
+                                           id="id_user_name">
                                     <label for="id_password">پسورد:</label>
-                                    <input type="password"   class="form-control" name="password" autocomplete="new-password" required="" id="id_password">
+                                    <input type="password" class="form-control" name="password"
+                                           autocomplete="new-password" required="" id="id_password">
 
+                                    {{ form.errors }}
                                     <div class="form-footer">
                                         <button type="submit" class="btn btn-outline-primary-2">
                                             <span> ورود</span>
@@ -84,17 +101,17 @@
 
 
 </div><!-- End .page-wrapper -->
-    </div><!-- End .modal -->
+</div><!-- End .modal -->
 
-    <!-- Plugins JS File -->
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-    <script src="{% static 'js/jquery.hoverIntent.min.js' %}"></script>
-    <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
-    <script src="{% static 'js/superfish.min.js' %}"></script>
-    <script src="{% static 'js/owl.carousel.min.js' %}"></script>
-    <!-- Main JS File -->
-    <script src="{% static 'js/main.js' %}"></script>
+<!-- Plugins JS File -->
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js/jquery.hoverIntent.min.js' %}"></script>
+<script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'js/superfish.min.js' %}"></script>
+<script src="{% static 'js/owl.carousel.min.js' %}"></script>
+<!-- Main JS File -->
+<script src="{% static 'js/main.js' %}"></script>
 </body>
 
 </html>

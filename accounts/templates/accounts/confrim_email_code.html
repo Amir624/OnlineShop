@@ -55,6 +55,7 @@
                             <div class="center">
                                 <form action="{% url 'confirm_code' %}" method="POST">
                                     {% csrf_token %}
+                                    {{ form.errors }}
                                     <label for="id_code">کد تایید:</label>
                                     <input type="number"   class="form-control" name="code" required="" id="id_code">
 

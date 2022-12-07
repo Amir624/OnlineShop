@@ -14,9 +14,11 @@ class Profile(models.Model):
     last_name = models.CharField(max_length=50,  blank=True, null=True)
     birth_day = models.DateTimeField( blank=True, null=True)
     mobile = models.IntegerField( blank=True, null=True)
+    address = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.user.username
+
 
 def save_profile_user(sender, **kwargs):
     if kwargs['created']:

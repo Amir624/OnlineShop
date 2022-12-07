@@ -17,8 +17,8 @@
             <nav aria-label="breadcrumb" class="breadcrumb-nav">
                 <div class="container">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index-1.html">خانه</a></li>
-                        <li class="breadcrumb-item"><a href="#">فروشگاه</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'product:home' %}">خانه</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'product:products' %}">فروشگاه</a></li>
                         <li class="breadcrumb-item active" aria-current="page">سبد خرید</li>
                     </ol>
                 </div><!-- End .container -->
@@ -54,8 +54,12 @@
 
                                                     <h3 class="product-title">
                                                         <a href="">{{ item.product_obj.product.title }}</a><br>
-                                                        {{ item.product_obj.color }}
-                                                        {{ item.product_obj.size }}
+                                                        {% if item.product_obj.color %}
+                                                        رنگ: {{ item.product_obj.color }} <br>
+                                                        {% endif %}
+                                                        {% if item.product_obj.size %}
+                                                       سایز: {{ item.product_obj.size }}
+                                                        {% endif %}
                                                     </h3><!-- End .product-title -->
                                                 </div><!-- End .product -->
                                             </td>
@@ -82,9 +86,11 @@
 
                                 <div class="cart-bottom">
                                     <div class="cart-discount">
-                                        <form action="#">
+                                        <form action="{% url 'coupon' %}" method="POST">
+                                            {% csrf_token %}
                                             <div class="input-group">
-                                                <input type="text" class="form-control" required placeholder="کد تخفیف">
+
+                                                <input name="code"  type="text" class="form-control" required placeholder="کد تخفیف">
                                                 <div class="input-group-append">
                                                     <button class="btn btn-outline-primary-2" type="submit"><i
                                                             class="icon-long-arrow-left"></i></button>
@@ -106,7 +112,12 @@
                                             <tr class="summary-subtotal">
                                                 <td>جمع کل سبد خرید : </td>
                                                 <td class="text-left">{{ cart.get_total_price | intcomma }} تومان</td>
+
                                             </tr><!-- End .summary-subtotal -->
+                                             <tr class="summary-subtotal">
+                                                  <td>قیمت بعد از تخفیف : </td>
+                                                 <td class="text-left">{{ cart.get_total_price_after_discount | intcomma }} تومان</td>
+                                             </tr>
                                             <tr class="summary-shipping">
                                                 <td>شیوه ارسال : </td>
                                                 <td>&nbsp;</td>
@@ -155,17 +166,24 @@
 
                                             <tr class="summary-total">
                                                 <td>مبلغ قابل پرداخت :</td>
-                                                <td class="text-left">{{ cart.get_total_price | intcomma }} تومان</td>
+                                                {% if cart.get_total_price_after_discount %}
+                                                <td class="text-left">{{ cart.get_total_price_after_discount | intcomma }} تومان</td>
+                                                 {% else %}
+                                                  <td class="text-left">{{ cart.get_total_price | intcomma }} تومان</td>
+                                                  {% endif %}
+
                                             </tr><!-- End .summary-total -->
                                         </tbody>
                                     </table><!-- End .table table-summary -->
 
-                                    <a href="checkout.html" class="btn btn-outline-primary-2 btn-order btn-block">رفتن
-                                        به صفحه پرداخت</a>
+                                    <a href="{% url 'order' %}" class="btn btn-outline-primary-2 btn-order btn-block">
+                                        ثبت سفارش</a>
                                 </div><!-- End .summary -->
 
                                 <a href="{% url 'product:products' %}" class="btn btn-outline-dark-2 btn-block mb-3"><span>ادامه
                                         خرید</span><i class="icon-refresh"></i></a>
+                                 <a href="{% url 'clear_cart' %}" class="btn btn-outline-dark-2 btn-block mb-3"><span>خالی کردن سبد خرید
+                                        </span><i class="icon-refresh"></i></a>
                             </aside><!-- End .col-lg-3 -->
                         </div><!-- End .row -->
                     </div><!-- End .container -->

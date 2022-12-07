@@ -1,0 +1,135 @@
+{% extends '_base.html' %}
+{% load humanize %}
+{% block title %}
+
+{% endblock %}
+
+{% block content %}
+
+
+     <main class="main">
+
+            <div class="page-content">
+                <div class="checkout">
+                    <div class="container">
+
+                        <form action=""  method="POST">
+                            {% csrf_token %}
+                            {{ form.errors }}
+                            <div class="row">
+                                <div class="col-lg-9">
+                                    <h2 class="checkout-title">جزئیات صورت حساب</h2><!-- End .checkout-title -->
+
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <label>نام *</label>
+                                            <input  name="first_name" type="text" class="form-control" required>
+                                        </div><!-- End .col-sm-6 -->
+
+
+                                        <div class="col-sm-6">
+                                            <label>نام خانوادگی *</label>
+                                            <input  name="last_name"  type="text" class="form-control" required>
+                                        </div><!-- End .col-sm-6 -->
+                                    </div><!-- End .row -->
+
+
+
+                                    <div class="row">
+
+
+                                        <div class="col-sm-6">
+                                            <label>موبایل *</label>
+                                            <input  name="phone"  type="tel" class="form-control" required>
+                                        </div><!-- End .col-sm-6 -->
+                                    </div><!-- End .row -->
+
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <label>ادرس *</label>
+                                            <textarea  name="address"   type="text" class="form-control" placeholder="نام خیابان و پلاک"
+                                                      required> </textarea>
+
+                                        </div><!-- End .col-sm-12 -->
+
+                                    </div><!-- End .row -->
+
+
+
+
+
+
+                                    <label>توضیحات (اختیاری)</label>
+                                    <textarea  name="note"   class="form-control" cols="30" rows="4"
+                                        placeholder="شما میتوانید توضیحات اضافی خود را اینجا بنویسید"></textarea>
+                                </div><!-- End .col-lg-9 -->
+                                <aside class="col-lg-3">
+                                    <div class="summary">
+                                        <h3 class="summary-title">سفارش شما</h3><!-- End .summary-title -->
+
+                                        <table class="table table-summary">
+                                            <thead>
+                                                <tr>
+                                                    <th>محصول</th>
+                                                    <th class="text-left">جمع</th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+{#                                            {% for item in order %}#}
+                                                <tr>
+                                                    <td><a href="#">{{ order.product.product.title}}</a></td>
+                                                    <td class="text-left">{{ order.get_price|intcomma}} تومان</td>
+                                                </tr>
+{#                                            {% endfor %}#}
+
+                                                <tr class="summary-subtotal">
+                                                    <td>جمع سبد خرید</td>
+                                                    <td class="text-left">{{ cart.get_total_price|intcomma}} تومان</td>
+                                                </tr><!-- End .summary-subtotal -->
+                                                <tr>
+                                                    <td>شیوه ارسال : </td>
+                                                    <td class="text-left">ارسال رایگان</td>
+                                                </tr>
+                                                <tr class="summary-total">
+                                                    <td>مبلغ قابل پرداخت :</td>
+                                                    <td class="text-left">{{ cart.get_total_price|intcomma}} تومان</td>
+                                                </tr><!-- End .summary-total -->
+                                            </tbody>
+                                        </table><!-- End .table table-summary -->
+
+                                        <div class="accordion-summary" id="accordion-payment">
+                                            <div class="card">
+
+
+                                                <div class="card">
+                                                    <div class="card-header" id="heading-3">
+                                                        <h2 class="card-title">
+                                                            <a class="collapsed" role="button" data-toggle="collapse"
+                                                                href="#collapse-3" aria-expanded="false"
+                                                                aria-controls="collapse-3">
+                                                                زرین پال <small class="float-left paypal-link"></small>
+                                                            </a>
+                                                        </h2>
+                                                    </div><!-- End .card-header -->
+
+                                                </div><!-- End .card -->
+
+
+                                            </div><!-- End .accordion -->
+
+                                            <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
+                                                <span class="btn-text">ثبت</span>
+                                                <span class="btn-hover-text">پرداخت</span>
+                                            </button>
+                                        </div><!-- End .summary -->
+                                </aside><!-- End .col-lg-3 -->
+                            </div><!-- End .row -->
+                        </form>
+                    </div><!-- End .container -->
+                </div><!-- End .checkout -->
+            </div><!-- End .page-content -->
+        </main><!-- End .main -->
+
+
+{% endblock %}

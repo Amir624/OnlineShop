@@ -9,11 +9,7 @@
 
 
       <main class="main">
-            <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
-                <div class="container">
-                    <h1 class="page-title">لیست<span>فروشگاه</span></h1>
-                </div><!-- End .container -->
-            </div><!-- End .page-header -->
+
             <nav aria-label="breadcrumb" class="breadcrumb-nav mb-2">
                 <div class="container">
                     <ol class="breadcrumb">
@@ -58,12 +54,23 @@
 
                                                 <div class="product-action">
 
-                                                    <a href="#" class="btn-product btn-compare"
+                                                    <a href="{% url 'product:add_compair' product.id %}" class="btn-product btn-compare"
                                                         title="مقایسه"><span>مقایسه</span></a>
                                                 </div><!-- End .product-action -->
 
-                                                <a href="#" class="btn-product btn-cart"><span>افزودن به سبد
-                                                        خرید</span></a>
+
+                                                    <form method="POST" action="{% url 'add_cart' product.id %}">
+                                                        {% csrf_token %}
+                                                    <div class="product-action">
+
+                                                        <input type="hidden" name="quantity" id="qty" class="btn-product btn-cart" value="1"
+                                                               min="1"
+                                                               max="30" step="1" data-decimals="0" required>
+                                                        <button type="submit" class="btn-product btn-cart">
+                                                            <span>افزودن به سبد خرید</span>
+                                                        </button>
+                                                    </div><!-- End .product-action -->
+                                                    </form>
                                             </div><!-- End .product-list-action -->
                                         </div><!-- End .col-sm-6 col-lg-3 -->
 
@@ -73,14 +80,14 @@
                                                     title="افزودن به لیست علاقه مندی"><span>افزودن به لیست علاقه
                                                         مندی</span></a>
                                                 <div class="product-cat">
-                                                    <a href="#">{{ product.category.name }}</a>
+                                                    <a href="#">{{ product.brand}}</a>
                                                 </div><!-- End .product-cat -->
                                                 <h3 class="product-title"><a href="product.html">{{ product.title}}</a>
                                                 </h3><!-- End .product-title -->
 
                                                 <div class="product-content">
                                                     <p>
-                                                        {{ product.description | truncatewords:20 }}</p>
+                                                        {{ product.description | truncatewords:20 | safe }}</p>
                                                 </div><!-- End .product-content -->
 
                                             </div><!-- End .product-body -->

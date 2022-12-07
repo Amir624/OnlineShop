@@ -2,18 +2,16 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from .forms import SignUpForm, LoginForm, ConfrimCode
+from .forms import SignUpForm, LoginForm, ConfrimCode, CompleteProfile
 from django.core.mail import EmailMessage
 from random import randint
 from django.contrib.auth import get_user_model
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes, force_str
-from django.contrib.sites.shortcuts import get_current_site
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from django.utils.six import text_type
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import views
 from django.urls import reverse_lazy
-from . models import Profile
+from .models import Profile
+from orders.models import Order, OrderItem
+
 
 def register(request):
     global random_code, new_form
@@ -31,6 +29,7 @@ def register(request):
                 [data['email']]
             )
             email.send(fail_silently=False)
+            messages.success(request, 'کد فعال سازی به ایمیل شما ارسال شد')
 
             return redirect('confirm_code')
 
@@ -47,6 +46,7 @@ def confirm_email_code(request):
             data = form.cleaned_data
             if random_code == data['code']:
                 new_form.save()
+                messages.success(request, 'ثبت نام شما با موفقیت انجام شد')
 
                 return redirect('login')
 
@@ -89,11 +89,29 @@ def log_out(request):
     return redirect('product:products')
 
 
-
-
+@login_required()
 def profile_user(request):
     profile = Profile.objects.get(user_id=request.user.id)
-    return render(request, 'accounts/profile.html', {'profile':profile})
+    user = request.user.id
+    order = Order.objects.filter(user_id=user)
+    order_1 = OrderItem.objects.filter(order__user_id=user)
+
+    return render(request, 'accounts/dashboard.html', {'profile': profile, 'order': order_1})
+
+
+def profile_complete(request):
+    if request.method == 'POST':
+        form = CompleteProfile(request.POST, instance=request.user.profile)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'اطلاعات با موفیقت ذخیزه شد')
+
+            return redirect('profile')
+    else:
+        form = CompleteProfile(instance=request.user.profile)
+
+    return render(request, 'accounts/update_profile.html', {'form': form})
 
 
 class ResetPassword(views.PasswordResetView):
@@ -113,12 +131,6 @@ class ConfirmPassword(views.PasswordResetConfirmView):
 
 class Complete(views.PasswordResetCompleteView):
     template_name = 'accounts/password_complate.html'
-
-
-
-
-
-
 
 #
 # class EmailToken(PasswordResetTokenGenerator):

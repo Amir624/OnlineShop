@@ -7,6 +7,7 @@ admin.site.register(Brand)
 admin.site.register(Variant)
 admin.site.register(ProductGallery)
 admin.site.register(Comment)
+admin.site.register(CountViews)
 
 
 @admin.register(Category)

@@ -2,7 +2,9 @@ from django.db import models
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 
+
 from taggit.managers import TaggableManager
+from ckeditor.fields import RichTextField
 
 
 class Category(models.Model):
@@ -60,10 +62,12 @@ class Product(models.Model):
     unit_price = models.PositiveIntegerField()
     discount = models.PositiveIntegerField(null=True, blank=True)
     total_price = models.PositiveIntegerField()
-    description = models.TextField()
+    short_description = RichTextField()
+    description = RichTextField()
     favorite = models.ManyToManyField(get_user_model(), blank=True, related_name='favorite')
     total_favorite = models.PositiveIntegerField(default=0)
     sell = models.PositiveIntegerField(default=0)
+    views = models.IntegerField(default=0)
     time_create = models.DateTimeField(auto_now_add=True)
     time_update = models.DateTimeField(auto_now=True)
 
@@ -72,6 +76,8 @@ class Product(models.Model):
 
     def get_absolute_url(self):
         return reverse('product:detail_page', args=[self.slug, self.id])
+
+
 
     @property
     def total_price(self):
@@ -119,7 +125,7 @@ class ProductGallery(models.Model):
 class Comment(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='comments')
-    text = models.TextField()
+    text = RichTextField()
     rate = models.PositiveIntegerField(default=1)
     like = models.ManyToManyField(get_user_model(), blank=True, related_name='like')
     dislike = models.ManyToManyField(get_user_model(), blank=True, related_name='dislike')
@@ -130,3 +136,12 @@ class Comment(models.Model):
 
     def get_absolute_url(self):
         return reverse('product:detail_page', args=[self.id])
+
+
+class CountViews(models.Model):
+    ip = models.CharField(max_length=200, null=True, blank=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True)
+    time_create = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.product.title
