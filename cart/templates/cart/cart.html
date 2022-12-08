@@ -7,13 +7,13 @@
 
 {% block content %}
 
-{% if cart %}
-  <main class="main">
-{#            <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">#}
-{#                <div class="container">#}
-{#                    <h1 class="page-title">سبد خرید<span>فروشگاه</span></h1>#}
-{#                </div><!-- End .container -->#}
-{#            </div><!-- End .page-header -->#}
+    {% if cart %}
+        <main class="main">
+            {#            <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">#}
+            {#                <div class="container">#}
+            {#                    <h1 class="page-title">سبد خرید<span>فروشگاه</span></h1>#}
+            {#                </div><!-- End .container -->#}
+            {#            </div><!-- End .page-header -->#}
             <nav aria-label="breadcrumb" class="breadcrumb-nav">
                 <div class="container">
                     <ol class="breadcrumb">
@@ -31,13 +31,13 @@
                             <div class="col-lg-9">
                                 <table class="table table-cart table-mobile">
                                     <thead>
-                                        <tr>
-                                            <th>محصول</th>
-                                            <th>قیمت</th>
-                                            <th>تعداد</th>
-                                            <th>مجموع</th>
-                                            <th></th>
-                                        </tr>
+                                    <tr>
+                                        <th>محصول</th>
+                                        <th>قیمت</th>
+                                        <th>تعداد</th>
+                                        <th>مجموع</th>
+                                        <th></th>
+                                    </tr>
                                     </thead>
 
                                     <tbody>
@@ -47,37 +47,48 @@
                                                 <div class="product">
                                                     <figure class="product-media">
                                                         <a href="#">
-                                                            <img src="{{ item.product_obj.cover.url}}"
-                                                                alt="تصویر محصول">
+                                                            <img src="{{ item.product_obj.product.cover.url }}"
+                                                                 alt="تصویر محصول">
                                                         </a>
                                                     </figure>
 
                                                     <h3 class="product-title">
                                                         <a href="">{{ item.product_obj.product.title }}</a><br>
                                                         {% if item.product_obj.color %}
-                                                        رنگ: {{ item.product_obj.color }} <br>
+                                                             <br>
+                                                            <div class="product-nav product-nav-dots">
+                                                                {{ item.product_obj.color }}  <a href="#" class="active" style="background: {{ item.product_obj.color.color_code }};"><span
+                                                                        class="sr-only">{{ item.product_obj.color }}</span></a>
+
+                                                            </div><!-- End .product-nav -->
                                                         {% endif %}
                                                         {% if item.product_obj.size %}
-                                                       سایز: {{ item.product_obj.size }}
+                                                            سایز: {{ item.product_obj.size }}
+
                                                         {% endif %}
                                                     </h3><!-- End .product-title -->
                                                 </div><!-- End .product -->
                                             </td>
                                             <td class="price-col">{{ item.product_obj.total_price }}</td>
                                             <td class="quantity-col">
-                                            <form action="{% url 'add_cart' item.product_obj.id %}" method="POST">
-                                                <div class="cart-product-quantity">
+                                                <form action="{% url 'add_cart' item.product_obj.id %}" method="POST">
+                                                    <div class="cart-product-quantity">
                                                         {% csrf_token %}
-                                                    <input type="number"  name="quantity" class="form-control" value="{{ item.quantity }}" min="1" max="30"
-                                                        step="1" data-decimals="0" required  onchange="this.form.submit();">
-                                                    {{ item.product_update_quantity_form.inplace }}
+                                                        <input type="number" name="quantity" class="form-control"
+                                                               value="{{ item.quantity }}" min="1" max="30"
+                                                               step="1" data-decimals="0" required
+                                                               onchange="this.form.submit();">
+                                                        {{ item.product_update_quantity_form.inplace }}
 
-                                                </div><!-- End .cart-product-quantity -->
-                                            </form>
+                                                    </div><!-- End .cart-product-quantity -->
+                                                </form>
                                             </td>
-                                            <td class="total-col">{{ item.total_price}}</td>
-                                            <td class="remove-col"> <a href="{% url 'remove_cart' item.product_obj.id %}" > <button class="btn-remove"><i
-                                                        class="icon-close"></i></button> </a>
+                                            <td class="total-col">{{ item.total_price }}</td>
+                                            <td class="remove-col"><a
+                                                    href="{% url 'remove_cart' item.product_obj.id %}">
+                                                <button class="btn-remove"><i
+                                                        class="icon-close"></i></button>
+                                            </a>
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -90,7 +101,8 @@
                                             {% csrf_token %}
                                             <div class="input-group">
 
-                                                <input name="code"  type="text" class="form-control" required placeholder="کد تخفیف">
+                                                <input name="code" type="text" class="form-control" required
+                                                       placeholder="کد تخفیف">
                                                 <div class="input-group-append">
                                                     <button class="btn btn-outline-primary-2" type="submit"><i
                                                             class="icon-long-arrow-left"></i></button>
@@ -99,8 +111,8 @@
                                         </form>
                                     </div><!-- End .cart-discount -->
 
-{#                                    <a href="#" class="btn btn-outline-dark-2"><span>به روز رسانی سبد خرید</span><i#}
-{#                                            class="icon-refresh"></i></a>#}
+                                    {#                                    <a href="#" class="btn btn-outline-dark-2"><span>به روز رسانی سبد خرید</span><i#}
+                                    {#                                            class="icon-refresh"></i></a>#}
                                 </div><!-- End .cart-bottom -->
                             </div><!-- End .col-lg-9 -->
                             <aside class="col-lg-3">
@@ -109,70 +121,74 @@
 
                                     <table class="table table-summary">
                                         <tbody>
-                                            <tr class="summary-subtotal">
-                                                <td>جمع کل سبد خرید : </td>
-                                                <td class="text-left">{{ cart.get_total_price | intcomma }} تومان</td>
+                                        <tr class="summary-subtotal">
+                                            <td>جمع کل سبد خرید :</td>
+                                            <td class="text-left">{{ cart.get_total_price | intcomma }} تومان</td>
 
-                                            </tr><!-- End .summary-subtotal -->
-                                             <tr class="summary-subtotal">
-                                                  <td>قیمت بعد از تخفیف : </td>
-                                                 <td class="text-left">{{ cart.get_total_price_after_discount | intcomma }} تومان</td>
-                                             </tr>
-                                            <tr class="summary-shipping">
-                                                <td>شیوه ارسال : </td>
-                                                <td>&nbsp;</td>
-                                            </tr>
+                                        </tr><!-- End .summary-subtotal -->
+                                        <tr class="summary-subtotal">
+                                            <td>قیمت بعد از تخفیف :</td>
+                                            <td class="text-left">{{ cart.get_total_price_after_discount | intcomma }}
+                                                تومان
+                                            </td>
+                                        </tr>
+                                        <tr class="summary-shipping">
+                                            <td>شیوه ارسال :</td>
+                                            <td>&nbsp;</td>
+                                        </tr>
 
-                                            <tr class="summary-shipping-row">
-                                                <td>
-                                                    <div class="custom-control custom-radio">
-                                                        <input type="radio" id="free-shipping" name="shipping"
-                                                            class="custom-control-input">
-                                                        <label class="custom-control-label" for="free-shipping">ارسال
-                                                            رایگان</label>
-                                                    </div><!-- End .custom-control -->
+                                        <tr class="summary-shipping-row">
+                                            <td>
+                                                <div class="custom-control custom-radio">
+                                                    <input type="radio" id="free-shipping" name="shipping"
+                                                           class="custom-control-input">
+                                                    <label class="custom-control-label" for="free-shipping">ارسال
+                                                        رایگان</label>
+                                                </div><!-- End .custom-control -->
+                                            </td>
+                                            <td class="text-left">0,000 تومان</td>
+                                        </tr><!-- End .summary-shipping-row -->
+
+                                        {#                                            <tr class="summary-shipping-row">#}
+                                        {#                                                <td>#}
+                                        {#                                                    <div class="custom-control custom-radio">#}
+                                        {#                                                        <input type="radio" id="standart-shipping" name="shipping"#}
+                                        {#                                                            class="custom-control-input">#}
+                                        {#                                                        <label class="custom-control-label" for="standart-shipping">پست#}
+                                        {#                                                            سفارشی :</label>#}
+                                        {#                                                    </div><!-- End .custom-control -->#}
+                                        {#                                                </td>#}
+                                        {#                                                <td class="text-left">10,000 تومان</td>#}
+                                        {#                                            </tr><!-- End .summary-shipping-row -->#}
+
+                                        {#                                            <tr class="summary-shipping-row">#}
+                                        {#                                                <td>#}
+                                        {#                                                    <div class="custom-control custom-radio">#}
+                                        {#                                                        <input type="radio" id="express-shipping" name="shipping"#}
+                                        {#                                                            class="custom-control-input">#}
+                                        {#                                                        <label class="custom-control-label" for="express-shipping">پست#}
+                                        {#                                                            پیشتاز :</label>#}
+                                        {#                                                    </div><!-- End .custom-control -->#}
+                                        {#                                                </td>#}
+                                        {#                                                <td class="text-left">20,000 تومان</td>#}
+                                        {#                                            </tr><!-- End .summary-shipping-row -->#}
+                                        <br>
+                                        {#                                            <tr class="summary-shipping-estimate">#}
+                                        {#                                                <td>آدرس<br> <a href="dashboard.html">تغییر آدرس</a></td>#}
+                                        {#                                                <td>&nbsp;</td>#}
+                                        {#                                            </tr><!-- End .summary-shipping-estimate -->#}
+
+                                        <tr class="summary-total">
+                                            <td>مبلغ قابل پرداخت :</td>
+                                            {% if cart.get_total_price_after_discount %}
+                                                <td class="text-left">{{ cart.get_total_price_after_discount | intcomma }}
+                                                    تومان
                                                 </td>
-                                                <td class="text-left">0,000 تومان</td>
-                                            </tr><!-- End .summary-shipping-row -->
+                                            {% else %}
+                                                <td class="text-left">{{ cart.get_total_price | intcomma }} تومان</td>
+                                            {% endif %}
 
-{#                                            <tr class="summary-shipping-row">#}
-{#                                                <td>#}
-{#                                                    <div class="custom-control custom-radio">#}
-{#                                                        <input type="radio" id="standart-shipping" name="shipping"#}
-{#                                                            class="custom-control-input">#}
-{#                                                        <label class="custom-control-label" for="standart-shipping">پست#}
-{#                                                            سفارشی :</label>#}
-{#                                                    </div><!-- End .custom-control -->#}
-{#                                                </td>#}
-{#                                                <td class="text-left">10,000 تومان</td>#}
-{#                                            </tr><!-- End .summary-shipping-row -->#}
-
-{#                                            <tr class="summary-shipping-row">#}
-{#                                                <td>#}
-{#                                                    <div class="custom-control custom-radio">#}
-{#                                                        <input type="radio" id="express-shipping" name="shipping"#}
-{#                                                            class="custom-control-input">#}
-{#                                                        <label class="custom-control-label" for="express-shipping">پست#}
-{#                                                            پیشتاز :</label>#}
-{#                                                    </div><!-- End .custom-control -->#}
-{#                                                </td>#}
-{#                                                <td class="text-left">20,000 تومان</td>#}
-{#                                            </tr><!-- End .summary-shipping-row -->#}
-                                                <br>
-{#                                            <tr class="summary-shipping-estimate">#}
-{#                                                <td>آدرس<br> <a href="dashboard.html">تغییر آدرس</a></td>#}
-{#                                                <td>&nbsp;</td>#}
-{#                                            </tr><!-- End .summary-shipping-estimate -->#}
-
-                                            <tr class="summary-total">
-                                                <td>مبلغ قابل پرداخت :</td>
-                                                {% if cart.get_total_price_after_discount %}
-                                                <td class="text-left">{{ cart.get_total_price_after_discount | intcomma }} تومان</td>
-                                                 {% else %}
-                                                  <td class="text-left">{{ cart.get_total_price | intcomma }} تومان</td>
-                                                  {% endif %}
-
-                                            </tr><!-- End .summary-total -->
+                                        </tr><!-- End .summary-total -->
                                         </tbody>
                                     </table><!-- End .table table-summary -->
 
@@ -180,9 +196,10 @@
                                         ثبت سفارش</a>
                                 </div><!-- End .summary -->
 
-                                <a href="{% url 'product:products' %}" class="btn btn-outline-dark-2 btn-block mb-3"><span>ادامه
+                                <a href="{% url 'product:products' %}"
+                                   class="btn btn-outline-dark-2 btn-block mb-3"><span>ادامه
                                         خرید</span><i class="icon-refresh"></i></a>
-                                 <a href="{% url 'clear_cart' %}" class="btn btn-outline-dark-2 btn-block mb-3"><span>خالی کردن سبد خرید
+                                <a href="{% url 'clear_cart' %}" class="btn btn-outline-dark-2 btn-block mb-3"><span>خالی کردن سبد خرید
                                         </span><i class="icon-refresh"></i></a>
                             </aside><!-- End .col-lg-3 -->
                         </div><!-- End .row -->
@@ -190,13 +207,13 @@
                 </div><!-- End .cart -->
             </div><!-- End .page-content -->
         </main><!-- End .main -->
-{% else %}
-    <main class="main">
-{#            <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">#}
-{#                <div class="container">#}
-{#                    <h1 class="page-title">سبد خرید خالی<span>فروشگاه</span></h1>#}
-{#                </div><!-- End .container -->#}
-{#            </div><!-- End .page-header -->#}
+    {% else %}
+        <main class="main">
+            {#            <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">#}
+            {#                <div class="container">#}
+            {#                    <h1 class="page-title">سبد خرید خالی<span>فروشگاه</span></h1>#}
+            {#                </div><!-- End .container -->#}
+            {#            </div><!-- End .page-header -->#}
             <nav aria-label="breadcrumb" class="breadcrumb-nav">
                 <div class="container">
                     <ol class="breadcrumb">
@@ -224,7 +241,7 @@
                 </div><!-- End .cart -->
             </div><!-- End .page-content -->
         </main><!-- End .main -->
-{% endif %}
+    {% endif %}
 
 
 

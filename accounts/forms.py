@@ -3,6 +3,8 @@ from .models import CustomUser
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth import get_user_model
 from .models import CustomUser, Profile
+from jalali_date.fields import JalaliDateField, SplitJalaliDateTimeField
+from jalali_date.widgets import AdminJalaliDateWidget, AdminSplitJalaliDateTime
 
 error = {
     'required': 'این فیلد اجباری است',
@@ -31,6 +33,7 @@ class ConfrimCode(forms.Form):
 
 
 class CompleteProfile(forms.ModelForm):
+    birth_day = forms.DateField(widget=forms.TextInput(attrs={'placeholder': "به جای اسلش از خط فاصله استفاده کنید"}))
     class Meta:
         model = Profile
         fields = ('first_name', 'last_name', 'birth_day', 'mobile', 'address')

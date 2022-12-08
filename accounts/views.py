@@ -105,7 +105,7 @@ def profile_complete(request):
 
         if form.is_valid():
             form.save()
-            messages.success(request, 'اطلاعات با موفیقت ذخیزه شد')
+            messages.success(request, 'اطلاعات با موفیقت ذخیره شد')
 
             return redirect('profile')
     else:

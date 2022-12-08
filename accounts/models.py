@@ -12,8 +12,8 @@ class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=50, blank=True, null=True)
     last_name = models.CharField(max_length=50,  blank=True, null=True)
-    birth_day = models.DateTimeField( blank=True, null=True)
-    mobile = models.IntegerField( blank=True, null=True)
+    birth_day = models.DateField( blank=True, null=True)
+    mobile = models.CharField(max_length=11,  blank=True, null=True)
     address = models.TextField(blank=True, null=True)
 
     def __str__(self):

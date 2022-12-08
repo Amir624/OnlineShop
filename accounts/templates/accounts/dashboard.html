@@ -1,5 +1,5 @@
 {% extends '_base.html' %}
-
+{% load jalali_tags %}
 {% block title %}
 حساب کاربری
 {% endblock %}
@@ -106,7 +106,7 @@
                                                         <p>   نام کاربری شما  :{{ user.username | capfirst }}<br>
                                                             نام : {{ profile.first_name }}<br>
                                                           نام خانوادگی :  {{ profile.last_name }}<br>
-                                                             تاریخ تولد : {{ profile.birth_day }}<br>
+                                                             تاریخ تولد : {{ profile.birth_day | to_jalali:'%y/%m/%d' }}<br>
                                                             ایمیل : {{ user.email }}<br>
                                                              موبایل : {{ profile.mobile }}<br>
                                                             آدرس : {{ profile.address }}<br>

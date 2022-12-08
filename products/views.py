@@ -40,12 +40,12 @@ def product_detail(request, slug, pk):
     comments = product.comments.all()
     ip = request.META.get('REMOTE_ADDR')
     view = CountViews.objects.filter(product_id=product.id, ip=ip)
+    similar = product.tags.similar_objects()[:4]
+    form = CommentForm()
     if not view.exists():
         CountViews.objects.create(product_id=product.id, ip=ip)
         product.views += 1
         product.save()
-    similar = product.tags.similar_objects()[:4]
-    form = CommentForm()
 
     if request.method == 'POST':
         variant = Variant.objects.filter(product_id=pk)
@@ -63,7 +63,7 @@ def product_detail(request, slug, pk):
 
     return render(request, 'products/product_details.html',
                   {'products': product, 'form': form, 'similar': similar, 'product_var': variant, 'sizes': size,
-                   'colors': color, 'variant': variant, 'variants': variants})
+                   'colors': color, 'variant': variant, 'variants': variants, 'comments': comments})
 
 
 @require_POST
@@ -79,7 +79,7 @@ def product_comments(request, pk):
             new_form.save()
             messages.success(request, 'نظر شما ثبت شد')
             form = CommentForm()
-            return redirect('product:detail_page', product.id)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
     else:
         form = CommentForm()

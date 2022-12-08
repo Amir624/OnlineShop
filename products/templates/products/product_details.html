@@ -2,6 +2,7 @@
 {% load crispy_forms_tags %}
 {% load humanize %}
 {% load static %}
+{% load jalali_tags %}
 {% block title %}
     مشخصات محصول
 {% endblock %}
@@ -94,25 +95,27 @@
                                     <div class="details-filter-row details-row-size">
                                         <label>رنگ : </label>
 
-                                        <div class="product-nav product-nav-dots">
+                                         <label> {{ variants.color }}  </label>
                                             <form action="" method="post">
+                                        <div class="product-nav product-nav-dots">
 
                                                 {% csrf_token %}
 
                                                 {% for color in colors %}
 
-                                                    <input type="radio" name="select"
-                                                           style="background: {{ color.color.color_code }};"
+                                                    <input  type="radio" name="select"
+                                                           style="background-color: {{ color.color.color_code }}"
                                                            onchange="this.form.submit();"
                                                            value="{{ color.id }}"
                                                             {% if variants.id == color.id %} checked{% endif %} >
-                                                    {{ color.color.name }}<br>
+                                                   <a  href="#" style="background: {{ color.color.color_code }};"><span class="sr-only">نام
+                                                    رنگ</span></a>
 
 
 
                                                 {% endfor %}
-                                            </form>
                                         </div><!-- End .product-nav -->
+                                            </form>
                                     </div>
                                     <div class="details-filter-row details-row-size">
                                         <label for="size">سایز : </label>
@@ -180,19 +183,11 @@
                                                            value="{{ data.id }}"
                                                             {% if variants.id == data.id %} checked{% endif %} >
                                                     {{ data.size }}<br>
-                                                    {#                                                           style="background-color: {{ color.color__color_code }};color: white;border: 1px solid #e4e4e4;padding: 8px;border-radius: 3px;cursor: pointer;">{{ data.color}}</input>#}
 
 
                                                 {% endfor %}
                                             </form>
-{#                                        #}
-{#                                            <select name="select" id="size" class="form-control">#}
-{#                                                <option value="#" selected="selected">سایز را انتخاب کنید</option>#}
-{#                                                {% for size in variant %}#}
-{#                                                    {{ size.size.name }}#}
-{#                                                {% endfor %}#}
-{##}
-{#                                            </select>#}
+
                                         </div><!-- End .select-custom -->
                                     </div>
                                 {% endif %}
@@ -203,7 +198,7 @@
                                     </div><!-- End .product-details-quantity -->
                                     <form method="POST" action="{% url 'add_cart' variants.id %}">
                                         {% csrf_token %}
-                                        <input type="hidden" name="test" value="">
+
                                         <input type="number" name="quantity" id="qty" class="form-control" value="1"
                                                min="1"
                                                max="30" step="1" data-decimals="0" required>
@@ -329,6 +324,7 @@
                                     <form method="POST" action="{% url 'product:comment' products.id %}">
                                         {% csrf_token %}
                                         {{ form.text | safe }}
+                                        {{ form.errors }}
                                         <div class="text-center">
                                             <button type="submit" class="btn btn-dark">send</button>
                                         </div>
@@ -344,14 +340,14 @@
                                 <div class="review">
                                     <div class="row no-gutters">
                                         <div class="col-auto">
-                                            <h4><a href="#">{{ user.username }}2</a></h4>
+                                            <h4><a href="#">{{ user.username | capfirst}}</a></h4>
                                             <div class="ratings-container">
                                                 <div class="ratings">
-                                                    <div class="ratings-val" style="width: 100%;"></div>
+                                                    <div class="ratings-val"   style="width: 100%;"></div>
                                                     <!-- End .ratings-val -->
                                                 </div><!-- End .ratings -->
                                             </div><!-- End .rating-container -->
-                                            <span class="review-date">{{ comment.date_create }}</span>
+                                            <span class="review-date">{{ comment.date_create |to_jalali:'%y/%m/%d _ %H:%M' }}</span>
                                         </div><!-- End .col -->
                                         <div class="col-12">
                                             <div class="review-content">
@@ -412,8 +408,8 @@
 
                     <div class="product product-7 text-center">
                         <figure class="product-media">
-                            <span class="product-label label-new">جدید</span>
-                            <a href="product.html">
+
+                            <a href="#">
                                 <img src="{{ tags.cover.url }}" alt="تصویر محصول"
                                      class="product-image">
                             </a>
@@ -421,8 +417,7 @@
                             <div class="product-action-vertical">
                                 <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>افزودن به
                                             لیست علاقه مندی</span></a>
-                                <a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-                                   title="مشاهده سریع"><span>مشاهده سریع</span></a>
+
                                 <a href="#" class="btn-product-icon btn-compare" title="مقایسه"><span>لیست
                                             مقایسه</span></a>
                             </div><!-- End .product-action-vertical -->
@@ -436,7 +431,7 @@
                             <div class="product-cat text-center">
                                 <a href="#">{{ tags.brand }}</a>
                             </div><!-- End .product-cat -->
-                            <h3 class="product-title text-center"><a href="product.html">{{ tags.title }}</a></h3>
+                            <h3 class="product-title text-center"><a href="#">{{ tags.title }}</a></h3>
                             <!-- End .product-title -->
                             <div class="product-price">
                                 {{ tags.total_Price }} تومان
@@ -468,60 +463,6 @@
 
     <script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
     <script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
-    <script>
-        $(document).on('href', '.btn-product btn-wishlist', function (event) {
-            event.preventDefault();
-            $.ajax({
-                url: $(this).attr('href'),
-                type: 'GET',
-                data: $(this).serialize(),
-                dataType: 'json',
-                success: function (response) {
-                    alert('ok')
-                },
-                error: function (error) {
-                    alert('error')
-                },
-            });
 
-        });
-    </script>
-
-    <script>
-
-        $(".choose-size").hide();
-
-        $(".choose-color").on('click', function () {
-            var _color = $(this).attr('data-color');
-
-            $(".choose-size").hide();
-            $("color" + _color).show();
-            $("color" + _color).first().addClass('active');
-        });
-
-
-
-
-        $(".choose-size").on('click', function () {
-            $(".choose-size").removeClass('active');
-            $(this).add('data-price');
-            var _price = $(this).attr('data-price');
-            $(".product-price").text(_price);
-
-
-        })
-
-        $(".choose-color").first().addClass('focused');
-        var _color = $(".choose-color").first.attr('data-color');
-        var _price = $(".choose-size").first.attr('data-prise');
-
-        $('.color' + _color).show();
-        $("color" + _color).first().addClass('active');
-        $(".product-price").text(_price);
-
-
-
-
-    </script>
 
 {% endblock %}

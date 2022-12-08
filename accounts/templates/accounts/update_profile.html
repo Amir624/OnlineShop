@@ -1,50 +1,55 @@
 {% extends '_base.html' %}
 {% load crispy_forms_tags %}
+{% load jalali_tags %}
+{% load static %}
 {% block title %}
     حساب کاربری
 {% endblock %}
 
-
-
 {% block content %}
-    <form action="{% url 'update_profile' %}"  method="POST">
-    {% csrf_token %}
+    <form action="{% url 'update_profile' %}" method="POST">
+        {% csrf_token %}
         <div class="center">
-            <div >
+            <div>
                 {{ form | crispy }}
+                {{ form.errors }}
                 {{ form1 | crispy }}
-{#                <label>نام *</label>#}
-{#                <input name="first_name" type="text" class="form-control" required>#}
-{#            </div><!-- End .col-sm-6 -->#}
-{##}
-{#            <div class="col-sm-6">#}
-{#                <label>نام خانوادگی *</label>#}
-{#                <input name="last_name" type="text" class="form-control" required>#}
-{#            </div><!-- End .col-sm-6 -->#}
-{#        </div><!-- End .row -->#}
-{##}
-{#        <label>نام نمایش *</label>#}
-{#        <input name="username" type="text" class="form-control" required>#}
-{#        <small class="form-text">این نام در قسمت بازدیدها، نظرات و حساب کاربری شما#}
-{#            نمایش داده می شود.</small>#}
-{##}
-{#        <label>ایمیل *</label>#}
-{#        <input name="email" type="email" class="form-control" required>#}
-{##}
-{#        <label>موبایل *</label>#}
-{#        <input name="mobile" type="number" class="form-control" required>#}
-{##}
-{#        <label>ادرس *</label>#}
-{#        <textarea name="address" type="text" class="form-control" placeholder="نام خیابان و پلاک"#}
-{#                  required> </textarea>#}
-{##}
-{#        <label>تاریخ تولد *</label>#}
-{#        <input name="birth_day" type="number" class="form-control" required>#}
+                {{ form.errors }}
+                {#                <label>نام *</label>#}
+                {#                <input name="first_name" type="text" class="form-control" required>#}
+                {#            </div><!-- End .col-sm-6 -->#}
+                {##}
+                {#            <div class="col-sm-6">#}
+                {#                <label>نام خانوادگی *</label>#}
+                {#                <input name="last_name" type="text" class="form-control" required>#}
+                {#            </div><!-- End .col-sm-6 -->#}
+                {#        </div><!-- End .row -->#}
+                {##}
+                {#        <label>نام نمایش *</label>#}
+                {#        <input name="username" type="text" class="form-control" required>#}
+                {#        <small class="form-text">این نام در قسمت بازدیدها، نظرات و حساب کاربری شما#}
+                {#            نمایش داده می شود.</small>#}
+                {##}
+                {#        <label>ایمیل *</label>#}
+                {#        <input name="email" type="email" class="form-control" required>#}
+                {##}
+                {#        <label>موبایل *</label>#}
+                {#        <input name="mobile" type="number" class="form-control" required>#}
+                {##}
+                {#        <label>ادرس *</label>#}
+                {#        <textarea name="address" type="text" class="form-control" placeholder="نام خیابان و پلاک"#}
+                {#                  required> </textarea>#}
+                {##}
+                {#        <label>تاریخ تولد *</label>#}
+                {#        <input name="birth_day" type="number" class="form-control" required>#}
 
-        <button type="submit" class="btn btn-outline-primary-2 float-right">
-            <span>ذخیره تغییرات</span>
-            <i class="icon-long-arrow-left"></i>
-        </button>
+                <button type="submit" class="btn btn-outline-primary-2 float-right">
+                    <span>ذخیره تغییرات</span>
+                    <i class="icon-long-arrow-left"></i>
+                </button>
+
+
+
     </form>
 
 {% endblock %}

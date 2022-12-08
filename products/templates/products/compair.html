@@ -39,7 +39,7 @@
                             <td class="first-column">توضیحات</td>
                             {% for item in compair %}
                                 <td class="pro-desc">
-                                    <p>{{ item.product_obj.description | truncatewords:20}}</p>
+                                    <p>{{ item.product_obj.description | truncatewords:20 | safe}}</p>
                                 </td>
                             {% endfor %}
                         </tr>
@@ -109,6 +109,8 @@
                         </tbody>
                     </table>
                 </div>
+                 <a href="{% url 'product:clear_compair' %}" class="btn btn-outline-dark-2 btn-block mb-3"><span>حذف همه ی محصولات
+                                        </span><i class="icon-refresh"></i></a>
                 <div class="wishlist-share">
                     <div class="social-icons social-icons-sm mb-2 mt-3">
                         <label class="social-label">اشتراک گذاری در : </label>
